@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { analyzeFoodImage } from './actions';
 import type { ImageBasedAdulterationDetectionOutput } from '@/ai/flows/image-based-adulteration-detection';
-import { Upload, FileCheck2, AlertTriangle, Loader, Microscope, FlaskConical, ShieldCheck, ChevronsRight, Shield, ShieldAlert } from 'lucide-react';
+import { Upload, FileCheck2, AlertTriangle, Loader, Microscope, FlaskConical, ShieldCheck, ChevronsRight, Shield, ShieldAlert, CheckCircle, XCircle } from 'lucide-react';
 
 export default function ImageDetectionPage() {
     const [file, setFile] = useState<File | null>(null);
@@ -166,11 +166,11 @@ export default function ImageDetectionPage() {
                         )}
                         {result && !loading && (
                             <div className="space-y-6">
-                                <div className="p-4 rounded-lg bg-muted/50">
+                                <div className={`p-4 rounded-lg ${result.isAdulterated ? 'bg-destructive/10' : 'bg-green-600/10'}`}>
                                     <h3 className="font-bold text-lg mb-2">Overall Result</h3>
                                     {result.isAdulterated ? (
                                         <div className="flex items-center gap-3 text-destructive">
-                                            <ShieldAlert className="w-8 h-8 flex-shrink-0" />
+                                            <XCircle className="w-10 h-10 flex-shrink-0" />
                                             <div>
                                                 <p className="font-bold text-xl">Adulteration Detected</p>
                                                 <p className="text-sm">This food item is likely adulterated.</p>
@@ -178,7 +178,7 @@ export default function ImageDetectionPage() {
                                         </div>
                                     ) : (
                                         <div className="flex items-center gap-3 text-green-600">
-                                            <ShieldCheck className="w-8 h-8 flex-shrink-0" />
+                                            <CheckCircle className="w-10 h-10 flex-shrink-0" />
                                             <div>
                                                 <p className="font-bold text-xl">Likely Pure</p>
                                                 <p className="text-sm">No significant adulterants were detected.</p>

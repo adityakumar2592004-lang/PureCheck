@@ -17,7 +17,7 @@ const ImageBasedAdulterationDetectionInputSchema = z.object({
   foodImage: z
     .string()
     .describe(
-      'A photo of a food product, as a data URI that must include a MIME type and use Base64 encoding. Expected format: \'data:<mimetype>;base64,<encoded_data>\'.'
+      "A photo of a food product, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
 });
 export type ImageBasedAdulterationDetectionInput = z.infer<
@@ -58,15 +58,21 @@ const prompt = ai.definePrompt({
   name: 'imageBasedAdulterationDetectionPrompt',
   input: {schema: ImageBasedAdulterationDetectionInputSchema},
   output: {schema: ImageBasedAdulterationDetectionOutputSchema},
-  prompt: `You are an AI expert in food adulteration detection.
+  prompt: `You are a highly specialized AI expert in food adulteration detection. Your primary task is to analyze the provided food image and determine with a high degree of certainty whether it is adulterated.
 
-  Analyze the provided food image and determine if it is adulterated. Set the 'isAdulterated' boolean field to true if it is, and false otherwise. This is a critical field.
+  **Crucial Instruction:** You MUST set the 'isAdulterated' boolean field. Set it to 'true' if any signs of adulteration are present, and 'false' otherwise. This field is the most important part of your response. If you detect adulterants, 'isAdulterated' MUST be true. If you do not, it MUST be false.
 
-  Based on your analysis, provide a 'safetyRating'. This should be one of "Safe", "Likely Safe", "Use Caution", "Warning", "Unsafe", or "High Risk".
+  Based on your analysis, also provide a 'safetyRating'. This should be one of "Safe", "Likely Safe", "Use Caution", "Warning", "Unsafe", or "High Risk".
 
-  If adulterants are detected, identify them in 'possibleAdulterants'.
-  Provide a 'confidenceScore' (0-1) indicating the likelihood of adulteration.
-  Suggest 'verificationSteps' for physical verification of the detected adulterants.
+  If adulterants are detected ('isAdulterated' is true), you must:
+  1.  Identify them in the 'possibleAdulterants' array.
+  2.  Provide a 'confidenceScore' (a number between 0 and 1) indicating the likelihood of adulteration.
+  3.  Suggest practical 'verificationSteps' for physical confirmation of the detected adulterants.
+
+  If no adulterants are detected ('isAdulterated' is false):
+  1.  The 'possibleAdulterants' array should be empty.
+  2.  The 'confidenceScore' should be low (e.g., less than 0.1).
+  3.  The 'verificationSteps' should state that no verification is needed as the product appears pure.
 
   Food Image: {{media url=foodImage}}
 
