@@ -166,21 +166,31 @@ export default function ImageDetectionPage() {
                         )}
                         {result && !loading && (
                             <div className="space-y-6">
-                                <div>
+                                <div className="p-4 rounded-lg bg-muted/50">
+                                    <h3 className="font-bold text-lg mb-2">Overall Result</h3>
                                     {result.isAdulterated ? (
-                                        <div className="flex items-center gap-2 text-destructive font-bold text-lg mb-4">
-                                            <ShieldAlert className="w-6 h-6" />
-                                            <span>Adulterated</span>
+                                        <div className="flex items-center gap-3 text-destructive">
+                                            <ShieldAlert className="w-8 h-8 flex-shrink-0" />
+                                            <div>
+                                                <p className="font-bold text-xl">Adulteration Detected</p>
+                                                <p className="text-sm">This food item is likely adulterated.</p>
+                                            </div>
                                         </div>
                                     ) : (
-                                        <div className="flex items-center gap-2 text-green-600 font-bold text-lg mb-4">
-                                            <ShieldCheck className="w-6 h-6" />
-                                            <span>Not Adulterated</span>
+                                        <div className="flex items-center gap-3 text-green-600">
+                                            <ShieldCheck className="w-8 h-8 flex-shrink-0" />
+                                            <div>
+                                                <p className="font-bold text-xl">Likely Pure</p>
+                                                <p className="text-sm">No significant adulterants were detected.</p>
+                                            </div>
                                         </div>
                                     )}
-                                    <div className="flex justify-between items-center mb-2">
+                                </div>
+
+                                <div className="space-y-4">
+                                    <div className="flex justify-between items-center">
                                         <h4 className="font-semibold flex items-center gap-2"><ShieldCheck className="w-5 h-5 text-primary"/>Safety Rating</h4>
-                                        <Badge variant={getSafetyBadgeVariant(result.safetyRating)} className="text-sm">{result.safetyRating}</Badge>
+                                        <Badge variant={getSafetyBadgeVariant(result.safetyRating)} className="text-sm">{result.safetyRating || 'Not Assessed'}</Badge>
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <h4 className="font-semibold">Confidence Score</h4>
@@ -190,7 +200,7 @@ export default function ImageDetectionPage() {
                                 </div>
                                 <div>
                                     <h4 className="font-semibold flex items-center gap-2 mb-2"><FlaskConical className="w-5 h-5 text-primary"/>Possible Adulterants</h4>
-                                    {result.possibleAdulterants.length > 0 ? (
+                                    {result.possibleAdulterants && result.possibleAdulterants.length > 0 ? (
                                         <ul className="space-y-2">
                                             {result.possibleAdulterants.map((adulterant, index) => (
                                                 <li key={index} className="flex items-start gap-2">
@@ -203,13 +213,15 @@ export default function ImageDetectionPage() {
                                 </div>
                                 <div>
                                     <h4 className="font-semibold flex items-center gap-2 mb-2"><FileCheck2 className="w-5 h-5 text-primary"/>Verification Steps</h4>
-                                    <p className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-md">{result.verificationSteps}</p>
+                                    <p className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-md">{result.verificationSteps || 'No verification steps provided.'}</p>
                                 </div>
                             </div>
                         )}
                         {!result && !loading && !error && (
                             <div className="flex flex-col items-center justify-center h-full text-muted-foreground space-y-4 py-10">
-                                <p className="text-center">Upload an image and click "Analyze" to see the results here.</p>
+                                <Microscope className="w-10 h-10 mb-2"/>
+                                <p className="text-center font-semibold">Awaiting Analysis</p>
+                                <p className="text-center text-sm">Upload an image and click "Analyze" to see the results here.</p>
                             </div>
                         )}
                     </CardContent>

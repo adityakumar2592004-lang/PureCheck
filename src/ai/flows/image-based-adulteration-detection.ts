@@ -41,7 +41,7 @@ const ImageBasedAdulterationDetectionOutputSchema = z.object({
     .describe('Steps for physical verification of the detected adulterants.'),
   safetyRating: z
     .string()
-    .describe('A safety assessment of the food product based on the analysis.'),
+    .describe('A safety assessment of the food product based on the analysis. Possible values are: "Safe", "Likely Safe", "Use Caution", "Warning", "Unsafe", "High Risk".'),
 });
 
 export type ImageBasedAdulterationDetectionOutput = z.infer<
@@ -60,20 +60,17 @@ const prompt = ai.definePrompt({
   output: {schema: ImageBasedAdulterationDetectionOutputSchema},
   prompt: `You are an AI expert in food adulteration detection.
 
-  Analyze the provided food image and determine if it is adulterated. Set the 'isAdulterated' boolean field to true if it is, and false otherwise.
-  Identify potential adulterants.
-  Provide a confidence score (0-1) indicating the likelihood of adulteration.
-  Suggest steps for physical verification of the detected adulterants.
-  Assess the overall safety of the food product based on your analysis.
+  Analyze the provided food image and determine if it is adulterated. Set the 'isAdulterated' boolean field to true if it is, and false otherwise. This is a critical field.
+
+  Based on your analysis, provide a 'safetyRating'. This should be one of "Safe", "Likely Safe", "Use Caution", "Warning", "Unsafe", or "High Risk".
+
+  If adulterants are detected, identify them in 'possibleAdulterants'.
+  Provide a 'confidenceScore' (0-1) indicating the likelihood of adulteration.
+  Suggest 'verificationSteps' for physical verification of the detected adulterants.
 
   Food Image: {{media url=foodImage}}
 
-  Output:
-  - Is Adulterated: true or false.
-  - Possible Adulterants: List of potential adulterants.
-  - Confidence Score: Likelihood of adulteration (0-1).
-  - Verification Steps: Steps for physical verification.
-  - Safety Rating: Overall safety assessment.
+  Respond with a valid JSON object matching the defined output schema.
 `,
 });
 
