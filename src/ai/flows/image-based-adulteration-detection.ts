@@ -17,7 +17,7 @@ const ImageBasedAdulterationDetectionInputSchema = z.object({
   foodImage: z
     .string()
     .describe(
-      'A photo of a food product, as a data URI that must include a MIME type and use Base64 encoding. Expected format: \'data:<mimetype>;base64,<encoded_data>\'.' 
+      'A photo of a food product, as a data URI that must include a MIME type and use Base64 encoding. Expected format: \'data:<mimetype>;base64,<encoded_data>\'.'
     ),
 });
 export type ImageBasedAdulterationDetectionInput = z.infer<
@@ -25,13 +25,16 @@ export type ImageBasedAdulterationDetectionInput = z.infer<
 >;
 
 const ImageBasedAdulterationDetectionOutputSchema = z.object({
+  isAdulterated: z
+    .boolean()
+    .describe('A boolean indicating if the food is adulterated or not.'),
   possibleAdulterants: z
     .array(z.string())
     .describe('A list of possible adulterants detected in the food image.'),
   confidenceScore: z
     .number()
     .describe(
-      'A confidence score indicating the likelihood of adulteration (0-1).' 
+      'A confidence score indicating the likelihood of adulteration (0-1).'
     ),
   verificationSteps: z
     .string()
@@ -57,7 +60,8 @@ const prompt = ai.definePrompt({
   output: {schema: ImageBasedAdulterationDetectionOutputSchema},
   prompt: `You are an AI expert in food adulteration detection.
 
-  Analyze the provided food image and identify potential adulterants.
+  Analyze the provided food image and determine if it is adulterated. Set the 'isAdulterated' boolean field to true if it is, and false otherwise.
+  Identify potential adulterants.
   Provide a confidence score (0-1) indicating the likelihood of adulteration.
   Suggest steps for physical verification of the detected adulterants.
   Assess the overall safety of the food product based on your analysis.
@@ -65,6 +69,7 @@ const prompt = ai.definePrompt({
   Food Image: {{media url=foodImage}}
 
   Output:
+  - Is Adulterated: true or false.
   - Possible Adulterants: List of potential adulterants.
   - Confidence Score: Likelihood of adulteration (0-1).
   - Verification Steps: Steps for physical verification.

@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { analyzeFoodImage } from './actions';
 import type { ImageBasedAdulterationDetectionOutput } from '@/ai/flows/image-based-adulteration-detection';
-import { Upload, FileCheck2, AlertTriangle, Loader, Microscope, FlaskConical, ShieldCheck, ChevronsRight } from 'lucide-react';
+import { Upload, FileCheck2, AlertTriangle, Loader, Microscope, FlaskConical, ShieldCheck, ChevronsRight, Shield, ShieldAlert } from 'lucide-react';
 
 export default function ImageDetectionPage() {
     const [file, setFile] = useState<File | null>(null);
@@ -167,6 +167,17 @@ export default function ImageDetectionPage() {
                         {result && !loading && (
                             <div className="space-y-6">
                                 <div>
+                                    {result.isAdulterated ? (
+                                        <div className="flex items-center gap-2 text-destructive font-bold text-lg mb-4">
+                                            <ShieldAlert className="w-6 h-6" />
+                                            <span>Adulterated</span>
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center gap-2 text-green-600 font-bold text-lg mb-4">
+                                            <ShieldCheck className="w-6 h-6" />
+                                            <span>Not Adulterated</span>
+                                        </div>
+                                    )}
                                     <div className="flex justify-between items-center mb-2">
                                         <h4 className="font-semibold flex items-center gap-2"><ShieldCheck className="w-5 h-5 text-primary"/>Safety Rating</h4>
                                         <Badge variant={getSafetyBadgeVariant(result.safetyRating)} className="text-sm">{result.safetyRating}</Badge>
