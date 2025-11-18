@@ -58,21 +58,25 @@ const prompt = ai.definePrompt({
   name: 'imageBasedAdulterationDetectionPrompt',
   input: {schema: ImageBasedAdulterationDetectionInputSchema},
   output: {schema: ImageBasedAdulterationDetectionOutputSchema},
-  prompt: `You are an expert food adulteration detection AI. Your task is to analyze the provided food image and determine if it is adulterated.
+  prompt: `You are an expert food adulteration detection AI. Your task is to analyze the provided food image and determine if it has been deliberately adulterated with foreign substances.
 
-  **CRITICAL INSTRUCTION:** The 'isAdulterated' field is mandatory. You MUST set it to 'true' if you detect any adulterants, and 'false' otherwise. There is no middle ground; it must be a definitive boolean.
+  **IMPORTANT Distinction:** You MUST distinguish between natural spoilage/damage and deliberate adulteration.
+  - **Adulteration IS:** The addition of non-food substances to deceive consumers (e.g., brick powder in chili, dyes in spices, plastic rice).
+  - **Adulteration IS NOT:** Natural processes like ripening, over-ripening, bruising (e.g., a banana with brown spots), wilting, or minor physical blemishes. An overripe, bruised banana is NOT adulterated.
 
-  - If 'isAdulterated' is true:
-    1.  List the detected substances in 'possibleAdulterants'.
+  **CRITICAL INSTRUCTION:** The 'isAdulterated' field is mandatory. You MUST set it to 'true' if you detect signs of deliberate adulteration, and 'false' otherwise.
+
+  - If 'isAdulterated' is true (deliberate adulteration is likely):
+    1.  List the detected foreign substances in 'possibleAdulterants'.
     2.  Provide a 'confidenceScore' (0-1) for the detection.
     3.  Suggest 'verificationSteps' for physical confirmation.
-    4.  Assign an appropriate 'safetyRating' (e.g., "Unsafe", "High Risk").
+    4.  Assign a 'safetyRating' of "Unsafe" or "High Risk".
 
-  - If 'isAdulterated' is false:
+  - If 'isAdulterated' is false (no adulteration, only natural state):
     1.  'possibleAdulterants' MUST be an empty array.
     2.  'confidenceScore' should be very low (e.g., below 0.1).
-    3.  'verificationSteps' should clearly state that no issues were found.
-    4.  Assign a 'safetyRating' of "Safe" or "Likely Safe".
+    3.  'verificationSteps' should clearly state that no signs of artificial adulteration were found. Mention if the food appears bruised, old, or spoiled naturally.
+    4.  Assign a 'safetyRating' based on its natural state (e.g., "Safe", "Use Caution" if spoiled).
 
   Food Image: {{media url=foodImage}}
 
