@@ -1,0 +1,22 @@
+{
+  "name": "PureCheck - Food Adulteration Detection",
+  "short_name": "PureCheck",
+  "description": "Detect food adulteration with AI-powered image analysis and manual tests.",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#22c55e",
+  "background_color": "#f1f5f9",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait"
+}
